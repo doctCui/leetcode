@@ -1,0 +1,64 @@
+class Solution {
+
+    public String plusOne(String cur,int j){
+        char[] ss = cur.toCharArray();
+        if(ss[j] == '9'){
+            ss[j] = '0';
+        }else{
+            ss[j] += 1;
+        }
+        return new String(ss);
+    }
+    public String minOne(String cur,int j){
+        char[] ss = cur.toCharArray();
+        if(ss[j] == '0'){
+            ss[j] = '9';
+        }else{
+            ss[j] =(char) (ss[j] - 1);
+        }
+        return new String(ss);
+    }
+
+    public int openLock(String[] deadends, String target) {
+        Queue<String> q = new LinkedList<>();
+        //已经访问过的
+        Set<String> visited = new HashSet<>();
+        //需要避开的
+        Set<String> deadList = new HashSet<>();
+        for(String dead : deadends){
+            deadList.add(dead);
+        }
+        q.offer("0000");
+        visited.add("0000");
+        int depth = 0;
+        while(!q.isEmpty()){
+            int sz = q.size();
+            for(int i=0;i<sz;i++){
+                String cur = q.poll();
+                if(deadList.contains(cur)){
+                    continue;
+                }
+                if(cur.equals(target)){
+                    return depth;
+                }
+                //第一次循环有四个位置可以转
+                for(int j = 0;j<4;j++){
+                   String one = plusOne(cur,j);
+                   if(!visited.contains(one)){
+                       q.offer(one);
+                        visited.add(one);
+                   }
+                   String two = minOne(cur,j);
+                   if(!visited.contains(two)){
+                       q.offer(two);
+                        visited.add(two);
+                   }
+
+                }
+            }
+            depth++;
+        }
+        //穷举完还找不到的，直接返回-1
+        return -1;
+    }
+}
